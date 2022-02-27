@@ -1,0 +1,35 @@
+version: '3'
+services:
+#  frontend:
+#    build: ./frontend
+#    ports:
+#      - "80:80"
+#  order-service:
+#    build: ./order-service
+#    ports:
+#      - "8080:8080"
+  inventory-service:
+    build: ./inventory-service
+    ports:
+      - "8012:8012"
+    depends_on:
+      - mongo-db
+    links:
+      - mongo-db
+#  shipping-service:
+#    build: ./shipping-service
+#    ports:
+#      - "8082:8082"
+
+  mongo-db:
+    image: mongo
+    ports:
+      - "27017:27017"
+    container_name: mongo-db
+
+  mongo-seed-inventory-service:
+    build: ./inventory-service/src/main/resources/mongo-seed
+    depends_on:
+      - mongo-db
+    links:
+      - mongo-db
