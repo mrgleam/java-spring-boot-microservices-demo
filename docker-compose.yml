@@ -16,10 +16,14 @@ services:
       - mongo-db
     links:
       - mongo-db
-#  shipping-service:
-#    build: ./shipping-service
-#    ports:
-#      - "8082:8082"
+  shipping-service:
+    build: ./shipping-service
+    ports:
+      - "8013:8013"
+    depends_on:
+      - mongo-db
+    links:
+      - mongo-db
 
   mongo-db:
     image: mongo

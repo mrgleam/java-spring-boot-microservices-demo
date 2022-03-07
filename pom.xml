@@ -21,6 +21,7 @@
 
     <modules>
         <module>inventory-service</module>
+        <module>shipping-service</module>
     </modules>
 
     <build>
