@@ -27,4 +27,9 @@ public class ProductController {
     public Order processOrder(@RequestBody Order order) {
         return productService.handleOrder(order);
     }
+
+    @DeleteMapping
+    public Order revertOrder(@RequestBody Order order) {
+        return productService.revertOrder(order);
+    }
 }

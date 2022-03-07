@@ -36,4 +36,16 @@ public class ProductService {
                 }));
         return order.setOrderStatus(OrderStatus.SUCCESS);
     }
+
+    @Transactional
+    public Order revertOrder(Order order) {
+        order.getLineItems()
+                .forEach(l -> {
+                    Product p = productRepository.findById(l.getProductId())
+                            .orElseThrow(() -> new RuntimeException("Could not find the product: " + l.getProductId()));
+                    p.setStock(p.getStock() + l.getQuantity());
+                    productRepository.save(p);
+                });
+        return order.setOrderStatus(OrderStatus.SUCCESS);
+    }
 }
