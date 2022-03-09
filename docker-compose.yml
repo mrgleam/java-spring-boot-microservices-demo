@@ -4,10 +4,14 @@ services:
 #    build: ./frontend
 #    ports:
 #      - "80:80"
-#  order-service:
-#    build: ./order-service
-#    ports:
-#      - "8080:8080"
+  order-service:
+    build: ./order-service
+    ports:
+      - "8011:8011"
+    depends_on:
+      - mongo-db
+    links:
+      - mongo-db
   inventory-service:
     build: ./inventory-service
     ports:
