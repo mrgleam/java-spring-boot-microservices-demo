@@ -1,4 +1,4 @@
-package com.mathsermone.store.demo.shippingservice.constants;
+package com.mathsermone.store.demo.shipmentservice.constants;
 
 public enum OrderStatus {
     SUCCESS,

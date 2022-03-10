@@ -1,4 +1,4 @@
-package com.mathsermone.store.demo.shippingservice.model;
+package com.mathsermone.store.demo.shipmentservice.model;
 
 import lombok.Data;
 import org.bson.types.ObjectId;

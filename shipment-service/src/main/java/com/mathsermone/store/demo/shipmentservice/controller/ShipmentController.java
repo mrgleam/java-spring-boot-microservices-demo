@@ -1,7 +1,7 @@
-package com.mathsermone.store.demo.shippingservice.controller;
+package com.mathsermone.store.demo.shipmentservice.controller;
 
-import com.mathsermone.store.demo.shippingservice.model.Order;
-import com.mathsermone.store.demo.shippingservice.service.ShipmentService;
+import com.mathsermone.store.demo.shipmentservice.model.Order;
+import com.mathsermone.store.demo.shipmentservice.service.ShipmentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

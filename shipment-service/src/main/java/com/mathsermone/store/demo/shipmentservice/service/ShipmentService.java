@@ -1,9 +1,9 @@
-package com.mathsermone.store.demo.shippingservice.service;
+package com.mathsermone.store.demo.shipmentservice.service;
 
-import com.mathsermone.store.demo.shippingservice.constants.OrderStatus;
-import com.mathsermone.store.demo.shippingservice.model.Order;
-import com.mathsermone.store.demo.shippingservice.model.Shipment;
-import com.mathsermone.store.demo.shippingservice.repository.ShipmentRepository;
+import com.mathsermone.store.demo.shipmentservice.constants.OrderStatus;
+import com.mathsermone.store.demo.shipmentservice.model.Order;
+import com.mathsermone.store.demo.shipmentservice.repository.ShipmentRepository;
+import com.mathsermone.store.demo.shipmentservice.model.Shipment;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

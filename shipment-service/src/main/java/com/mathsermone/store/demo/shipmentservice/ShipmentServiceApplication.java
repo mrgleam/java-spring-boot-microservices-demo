@@ -1,4 +1,4 @@
-package com.mathsermone.store.demo.shippingservice;
+package com.mathsermone.store.demo.shipmentservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

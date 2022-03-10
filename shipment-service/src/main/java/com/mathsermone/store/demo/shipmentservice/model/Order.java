@@ -1,7 +1,7 @@
-package com.mathsermone.store.demo.shippingservice.model;
+package com.mathsermone.store.demo.shipmentservice.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.mathsermone.store.demo.shippingservice.constants.OrderStatus;
+import com.mathsermone.store.demo.shipmentservice.constants.OrderStatus;
 import lombok.Data;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;

@@ -1,4 +1,4 @@
-package com.mathsermone.store.demo.shippingservice;
+package com.mathsermone.store.demo.shipmentservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
