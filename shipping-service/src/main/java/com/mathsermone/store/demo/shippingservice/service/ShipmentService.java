@@ -13,7 +13,7 @@ import java.time.LocalTime;
 
 @Slf4j
 @Service
-public class ShippingService {
+public class ShipmentService {
     @Autowired
     ShipmentRepository shipmentRepository;
 
