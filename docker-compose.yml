@@ -4,6 +4,7 @@ services:
 #    build: ./frontend
 #    ports:
 #      - "80:80"
+
   order-service:
     build: ./order-service
     ports:
@@ -20,8 +21,8 @@ services:
       - mongo-db
     links:
       - mongo-db
-  shipping-service:
-    build: ./shipping-service
+  shipment-service:
+    build: ./shipment-service
     ports:
       - "8013:8013"
     depends_on:
