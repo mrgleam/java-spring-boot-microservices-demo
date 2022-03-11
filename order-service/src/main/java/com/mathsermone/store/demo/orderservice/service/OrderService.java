@@ -31,7 +31,6 @@ public class OrderService {
 
 
     public Order createOrder(Order order) {
-        System.out.println(inventoryServiceUrl);
         boolean success = true;
         Order savedOrder = orderRepository.save(order);
 
@@ -39,6 +38,7 @@ public class OrderService {
         try {
             inventoryResponse = restTemplate.postForObject(inventoryServiceUrl, order, Order.class);
         } catch (Exception ex) {
+            log.error(ex.getMessage());
             success = false;
         }
 
@@ -46,6 +46,7 @@ public class OrderService {
         try {
             shipmentResponse = restTemplate.postForObject(shipmentServiceUrl, order, Order.class);
         } catch (Exception ex) {
+            log.error(ex.getMessage());
             success = false;
             HttpEntity<Order> deleteRequest = new HttpEntity<>(order);
             ResponseEntity<Order> deleteResponse = restTemplate.exchange(inventoryServiceUrl, HttpMethod.DELETE, deleteRequest, Order.class);

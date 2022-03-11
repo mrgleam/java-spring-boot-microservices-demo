@@ -1,6 +1,8 @@
 package com.mathsermone.store.demo.orderservice.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.mathsermone.store.demo.orderservice.constants.OrderStatus;
+import com.mathsermone.store.demo.orderservice.serdeser.ObjectIdSerializer;
 import lombok.Data;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -13,6 +15,7 @@ import java.util.List;
 @Document
 public class Order {
     @Id
+    @JsonSerialize(using = ObjectIdSerializer.class)
     private ObjectId id;
     private String userId;
     private List<LineItem> lineItems;

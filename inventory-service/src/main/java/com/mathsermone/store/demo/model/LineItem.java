@@ -1,12 +1,16 @@
 package com.mathsermone.store.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.mathsermone.store.demo.serdeser.ObjectIdSerializer;
 import lombok.Data;
 import org.bson.types.ObjectId;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LineItem {
+
+    @JsonSerialize(using = ObjectIdSerializer.class)
     private ObjectId productId;
     private int quantity;
 
