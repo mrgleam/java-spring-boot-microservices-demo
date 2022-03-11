@@ -1,10 +1,9 @@
 version: '3'
 services:
-#  frontend:
-#    build: ./frontend
-#    ports:
-#      - "80:80"
-
+  frontend:
+    build: ./frontend
+    ports:
+      - "4021:80"
   order-service:
     build: ./order-service
     ports:
