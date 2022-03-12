@@ -1,0 +1,8 @@
+<div class="container" *ngIf="previousOrders !== null">
+    <h2>Your orders placed so far:</h2>
+    <ul>
+      <li *ngFor="let order of previousOrders | async">
+        <p>Order ID: {{ order.id }}, Order Status: {{order.orderStatus}}, Order Message: {{order.responseMessage}}</p>
+      </li>
+    </ul>
+  </div>
