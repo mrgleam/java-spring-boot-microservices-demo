@@ -1,5 +1,9 @@
+import { Item } from "./item";
+
 export interface Order {
-    id: string,
-    orderStatus: string,
-    responseMessage: string
+    id: string;
+    lineItems: Item[];
+    total: number;
+    orderStatus: string;
+    responseMessage: string;
 }
