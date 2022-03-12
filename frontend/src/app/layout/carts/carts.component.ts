@@ -1,5 +1,8 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable, of } from 'rxjs';
+import { Item } from 'src/app/models/item';
+import { CartService } from 'src/app/services/cart.service';
 
 @Component({
   selector: 'app-carts',
@@ -8,10 +11,17 @@ import { Router } from '@angular/router';
 })
 export class CartsComponent implements OnInit {
   @Output() closeCarts = new EventEmitter<boolean>();
+  
+  items: Observable<Item[]> = of([]);
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private cartService: CartService,
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.items = this.cartService.carts$;
+  }
 
   goToProducts(): void {
     this.closeCarts.emit(false);
