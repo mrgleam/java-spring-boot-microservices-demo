@@ -7,13 +7,13 @@ import { Product } from '../models/product';
 @Injectable({
   providedIn: 'root'
 })
-export class ProductsService {
+export class ProductService {
 
-  private orderUrl = 'products';
+  private productUrl = 'products';
 
   constructor(private http: HttpClient) { }
 
   getProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(`${environment.apiUrl}${this.orderUrl}`);
+    return this.http.get<Product[]>(`${environment.apiProductServiceUrl}${this.productUrl}`);
   }
 }

@@ -14,12 +14,12 @@ export class OrderService {
   constructor(private http: HttpClient) { }
 
   getOrders(): Observable<Order[]> {
-    return this.http.get<Order[]>(`${environment.apiUrl}${this.orderUrl}`);
+    return this.http.get<Order[]>(`${environment.apiOrderServiceUrl}${this.orderUrl}`);
   }
 
   createOrder(request: any): Observable<any> {
     let headers = new HttpHeaders({'Content-Type': 'application/json'});
     let options = {headers:headers};
-    return this.http.post(`${environment.apiUrl}${this.orderUrl}`, request, options)
+    return this.http.post(`${environment.apiOrderServiceUrl}${this.orderUrl}`, request, options)
   }
 }
