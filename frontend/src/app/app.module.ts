@@ -4,18 +4,18 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { OrderComponent } from './order/order.component';
-import { ProductsComponent } from './pages/products/products.component';
+import { LayoutModule } from './layout/layout.module';
 
 @NgModule({
   declarations: [
     AppComponent,
-    OrderComponent,
-    ProductsComponent
+    OrderComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    LayoutModule
   ],
   providers: [],
   bootstrap: [AppComponent]
