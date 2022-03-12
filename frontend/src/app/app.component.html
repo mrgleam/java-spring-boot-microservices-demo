@@ -1,2 +1,3 @@
-<app-header></app-header>
+<app-header (openCarts)="openCarts()"></app-header>
+<app-carts *ngIf="isOpenCarts" (closeCarts)="closeCarts()"></app-carts>
 <router-outlet></router-outlet>

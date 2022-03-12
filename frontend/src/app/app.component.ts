@@ -7,4 +7,13 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'frontend';
+  isOpenCarts = false;
+
+  openCarts(): void {
+    this.isOpenCarts = true;
+  }
+
+  closeCarts(): void {
+    this.isOpenCarts = false;
+  }
 }
