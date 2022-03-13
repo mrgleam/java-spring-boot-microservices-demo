@@ -4,7 +4,7 @@ import { Item } from '../models/item';
 import { Product } from '../models/product';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CartService {
   carts = new BehaviorSubject<Item[]>([]);
@@ -19,21 +19,26 @@ export class CartService {
 
     let current: Item[] = previous;
 
-    if (previous.find(item => item.productId === product.id)) {
+    if (previous.find((item) => item.productId === product.id)) {
       current = this.addPreviosItem(product.id, previous);
     } else {
-      current = previous.concat({productId: product.id, name: product.name, quantity: 1});
+      current = previous.concat({
+        productId: product.id,
+        name: product.name,
+        price: product.price,
+        quantity: 1,
+      });
     }
-    
+
     this.carts.next(current);
   }
 
   private addPreviosItem(productId: string, priviousItems: Item[]) {
-    return priviousItems.map(item => {
+    return priviousItems.map((item) => {
       if (item.productId === productId) {
         item.quantity = item.quantity + 1;
       }
       return item;
-    })
+    });
   }
 }

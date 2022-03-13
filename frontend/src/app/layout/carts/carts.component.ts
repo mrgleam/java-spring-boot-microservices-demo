@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { Observable, of, tap } from 'rxjs';
 import { Item } from 'src/app/models/item';
 import { Order } from 'src/app/models/order';
 import { CartService } from 'src/app/services/cart.service';
@@ -15,6 +15,7 @@ export class CartsComponent implements OnInit {
   @Output() closeCarts = new EventEmitter<boolean>();
 
   items$: Observable<Item[]> = of([]);
+  total: number = 0;
 
   constructor(
     private router: Router,
@@ -23,7 +24,9 @@ export class CartsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.items$ = this.cartService.carts$;
+    this.items$ = this.cartService.carts$.pipe(tap((items => {
+     this.total = items.reduce((p, c) => p + (c.price * c.quantity), 0); 
+    })));
   }
 
   checkout(): void {
@@ -40,7 +43,7 @@ export class CartsComponent implements OnInit {
         city: 'New York',
         zip: '11001',
       },
-      total: 0,
+      total: this.total,
       orderStatus: null,
       responseMessage: null,
     };
