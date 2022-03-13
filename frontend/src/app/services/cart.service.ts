@@ -33,6 +33,15 @@ export class CartService {
     this.carts.next(current);
   }
 
+  removeItem(productId: string): void {
+    const previous: Item[] = this.carts.value;
+
+    let current: Item[] = previous;
+
+    current = previous.filter((item) => item.productId != productId);
+    this.carts.next(current);
+  }
+
   private addPreviosItem(productId: string, priviousItems: Item[]) {
     return priviousItems.map((item) => {
       if (item.productId === productId) {

@@ -30,7 +30,6 @@ export class CartsComponent implements OnInit {
   }
 
   checkout(): void {
-    console.log();
     const order: Order = {
       id: null,
       userId: '1',
@@ -55,6 +54,10 @@ export class CartsComponent implements OnInit {
         console.log(error);
       }
     );
+  }
+
+  remove(productId: string): void {
+    this.cartService.removeItem(productId);
   }
 
   goToProducts(): void {
