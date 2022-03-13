@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Item } from '../models/item';
+import { Product } from '../models/product';
 
 @Injectable({
   providedIn: 'root'
@@ -13,15 +14,15 @@ export class CartService {
     this.carts$ = this.carts.asObservable();
   }
 
-  addToCarts(productId: string): void {
+  addToCarts(product: Product): void {
     const previous: Item[] = this.carts.value;
 
     let current: Item[] = previous;
 
-    if (previous.find(item => item.productId === productId)) {
-      current = this.addPreviosItem(productId, previous);
+    if (previous.find(item => item.productId === product.id)) {
+      current = this.addPreviosItem(product.id, previous);
     } else {
-      current = previous.concat({productId: productId, quantity: 1});
+      current = previous.concat({productId: product.id, name: product.name, quantity: 1});
     }
     
     this.carts.next(current);

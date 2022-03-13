@@ -17,9 +17,9 @@ export class OrderService {
     return this.http.get<Order[]>(`${environment.apiOrderServiceUrl}${this.orderUrl}`);
   }
 
-  createOrder(request: any): Observable<any> {
+  createOrder(request: Order): Observable<Order> {
     let headers = new HttpHeaders({'Content-Type': 'application/json'});
     let options = {headers:headers};
-    return this.http.post(`${environment.apiOrderServiceUrl}${this.orderUrl}`, request, options)
+    return this.http.post<Order>(`${environment.apiOrderServiceUrl}${this.orderUrl}`, request, options)
   }
 }
