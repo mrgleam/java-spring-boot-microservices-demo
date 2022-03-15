@@ -1,8 +1,8 @@
-FROM node:latest as builder
+FROM node:14 as builder
 WORKDIR /app
 COPY . .
 RUN npm install
-RUN npm run build --prod
+RUN npm run build
 
 FROM nginx:alpine
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
