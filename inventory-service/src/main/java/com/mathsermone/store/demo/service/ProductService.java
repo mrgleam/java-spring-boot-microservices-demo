@@ -8,8 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Slf4j
 @Service
@@ -17,35 +17,44 @@ public class ProductService {
     @Autowired
     ProductRepository productRepository;
 
-    public List<Product> getProducts() {
+    public Flux<Product> getProducts() {
         return productRepository.findAll();
     }
 
     @Transactional
-    public Order handleOrder(Order order) {
-        order.getLineItems()
-                .forEach((l -> {
-                    Product p = productRepository.findById(l.getProductId())
-                            .orElseThrow(() -> new RuntimeException("Could not find the product: " + l.getProductId()));
-                    if (p.getStock() >= l.getQuantity()) {
-                        p.setStock(p.getStock() - l.getQuantity());
-                        productRepository.save(p);
+    public Mono<Order> handleOrder(Order order) {
+        log.info("Handle order invoked with: {}", order);
+        return Flux.fromIterable(order.getLineItems())
+                .flatMap(l -> productRepository.findById(l.getProductId()))
+                .flatMap(p -> {
+                    int q = order.getLineItems()
+                            .stream()
+                            .filter(l -> l.getProductId()
+                                    .equals(p.getId()))
+                            .findAny()
+                            .get()
+                            .getQuantity();
+                    if (p.getStock() >= q) {
+                        p.setStock(p.getStock() - q);
+                        return productRepository.save(p);
                     } else {
-                        throw new RuntimeException("Product is out of stock: " + l.getProductId());
+                        return Mono.error(new RuntimeException("Product is out of stock: " + p.getId()));
                     }
-                }));
-        return order.setOrderStatus(OrderStatus.SUCCESS);
+                })
+                .then(Mono.just(order.setOrderStatus(OrderStatus.SUCCESS)));
     }
 
     @Transactional
-    public Order revertOrder(Order order) {
-        order.getLineItems()
-                .forEach(l -> {
-                    Product p = productRepository.findById(l.getProductId())
-                            .orElseThrow(() -> new RuntimeException("Could not find the product: " + l.getProductId()));
-                    p.setStock(p.getStock() + l.getQuantity());
-                    productRepository.save(p);
-                });
-        return order.setOrderStatus(OrderStatus.SUCCESS);
+    public Mono<Order> revertOrder(Order order) {
+        return Flux.fromIterable(order.getLineItems())
+                .flatMap(l -> productRepository.findById(l.getProductId()))
+                .flatMap(p -> {
+                    int q = order.getLineItems().stream()
+                            .filter(l -> l.getProductId().equals(p.getId()))
+                            .findAny().get()
+                            .getQuantity();
+                    p.setStock(p.getStock() + q);
+                    return productRepository.save(p);
+                }).then(Mono.just(order.setOrderStatus(OrderStatus.SUCCESS)));
     }
 }

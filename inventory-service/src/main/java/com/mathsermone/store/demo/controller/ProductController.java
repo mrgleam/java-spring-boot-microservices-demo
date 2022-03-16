@@ -7,7 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Slf4j
 @RestController
@@ -18,18 +19,18 @@ public class ProductController {
     ProductService productService;
 
     @GetMapping
-    public List<Product> getAllProducts() {
+    public Flux<Product> getAllProducts() {
         log.info("Get all products invoked.");
         return productService.getProducts();
     }
 
     @PostMapping
-    public Order processOrder(@RequestBody Order order) {
+    public Mono<Order> processOrder(@RequestBody Order order) {
         return productService.handleOrder(order);
     }
 
     @DeleteMapping
-    public Order revertOrder(@RequestBody Order order) {
+    public Mono<Order> revertOrder(@RequestBody Order order) {
         return productService.revertOrder(order);
     }
 }
