@@ -2,8 +2,8 @@ package com.mathsermone.store.demo.shipmentservice.repository;
 
 import com.mathsermone.store.demo.shipmentservice.model.Shipment;
 import org.bson.types.ObjectId;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 
-public interface ShipmentRepository extends MongoRepository<Shipment, ObjectId> {
+public interface ShipmentRepository extends ReactiveMongoRepository<Shipment, ObjectId> {
 
 }
