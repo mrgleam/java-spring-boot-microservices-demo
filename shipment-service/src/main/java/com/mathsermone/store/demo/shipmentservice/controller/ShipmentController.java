@@ -5,6 +5,7 @@ import com.mathsermone.store.demo.shipmentservice.service.ShipmentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 @Slf4j
 @RestController
@@ -15,7 +16,7 @@ public class ShipmentController {
     ShipmentService shipmentService;
 
     @PostMapping
-    public Order process(@RequestBody Order order) {
+    public Mono<Order> process(@RequestBody Order order) {
         return shipmentService.handleOrder(order);
     }
 }
