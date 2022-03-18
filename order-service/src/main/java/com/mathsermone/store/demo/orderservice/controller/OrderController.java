@@ -6,8 +6,8 @@ import com.mathsermone.store.demo.orderservice.service.OrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Slf4j
 @RestController
@@ -18,16 +18,19 @@ public class OrderController {
     OrderService orderService;
 
     @PostMapping
-    public Order create(@RequestBody Order order) {
-        Order processedOrder = orderService.createOrder(order);
-        if (OrderStatus.FAILURE.equals(processedOrder.getOrderStatus())) {
-            throw new RuntimeException("Order processing failed, please try again later.");
-        }
-        return processedOrder;
+    public Mono<Order> create(@RequestBody Order order) {
+        return orderService.createOrder(order)
+                .flatMap(o -> {
+                    if (OrderStatus.FAILURE.equals(o.getOrderStatus())) {
+                        return Mono.error(new RuntimeException("Order processing failed, please try again later." + o.getResponseMessage()));
+                    } else {
+                        return Mono.just(o);
+                    }
+                });
     }
 
     @GetMapping
-    public List<Order> getAll() {
+    public Flux<Order> getAll() {
         return orderService.getOrders();
     }
 }
