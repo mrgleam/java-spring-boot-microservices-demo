@@ -32,8 +32,6 @@ services:
   mongo-db:
     container_name: mongo-db
     build: ./mongo-replset
-    networks:
-      - mongors-network
     ports:
       - "27021:27017"
     links:
@@ -44,8 +42,6 @@ services:
   mongo2:
     container_name: mongo2
     image: mongo
-    networks:
-      - mongors-network
     ports:
       - "27022:27017"
     restart: always
@@ -53,8 +49,6 @@ services:
   mongo3:
     container_name: mongo3
     image: mongo
-    networks:
-      - mongors-network
     ports:
       - "27023:27017"
     restart: always
@@ -66,7 +60,3 @@ services:
       - mongo-db
     links:
       - mongo-db
-
-networks:
-  mongors-network:
-    driver: bridge
