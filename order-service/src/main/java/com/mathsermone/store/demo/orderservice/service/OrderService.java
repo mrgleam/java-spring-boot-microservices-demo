@@ -68,34 +68,6 @@ public class OrderService {
                     }
                 })
                 .flatMap(orderRepository::save);
-//        boolean success = true;
-//        Order savedOrder = orderRepository.save(order);
-//
-//        Order inventoryResponse = null;
-//        try {
-//            inventoryResponse = restTemplate.postForObject(inventoryServiceUrl, order, Order.class);
-//        } catch (Exception ex) {
-//            log.error(ex.getMessage());
-//            success = false;
-//        }
-//
-//        Order shipmentResponse = null;
-//        try {
-//            shipmentResponse = restTemplate.postForObject(shipmentServiceUrl, order, Order.class);
-//        } catch (Exception ex) {
-//            log.error(ex.getMessage());
-//            success = false;
-//            HttpEntity<Order> deleteRequest = new HttpEntity<>(order);
-//            ResponseEntity<Order> deleteResponse = restTemplate.exchange(inventoryServiceUrl, HttpMethod.DELETE, deleteRequest, Order.class);
-//        }
-//
-//        if (success) {
-//            savedOrder.setOrderStatus(OrderStatus.SUCCESS);
-//            savedOrder.setShippingDate(shipmentResponse.getShippingDate());
-//        } else {
-//            savedOrder.setOrderStatus(OrderStatus.FAILURE);
-//        }
-//        return orderRepository.save(savedOrder);
     }
 
     public Flux<Order> getOrders() {
