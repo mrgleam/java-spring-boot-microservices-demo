@@ -30,10 +30,35 @@ services:
       - mongo-db
 
   mongo-db:
-    image: mongo
-    ports:
-      - "27017:27017"
     container_name: mongo-db
+    build: ./mongo-replset
+    networks:
+      - mongors-network
+    ports:
+      - "27021:27017"
+    links:
+      - mongo2
+      - mongo3
+    restart: always
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "dbrs" ]
+  mongo2:
+    container_name: mongo2
+    image: mongo
+    networks:
+      - mongors-network
+    ports:
+      - "27022:27017"
+    restart: always
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "dbrs" ]
+  mongo3:
+    container_name: mongo3
+    image: mongo
+    networks:
+      - mongors-network
+    ports:
+      - "27023:27017"
+    restart: always
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "dbrs" ]
 
   mongo-seed-inventory-service:
     build: ./inventory-service/src/main/resources/mongo-seed
@@ -41,3 +66,7 @@ services:
       - mongo-db
     links:
       - mongo-db
+
+networks:
+  mongors-network:
+    driver: bridge
