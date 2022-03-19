@@ -48,6 +48,9 @@ export class CartsComponent implements OnInit {
     };
     this.orderService.createOrder(order).subscribe(
       (response) => {
+        this.closeCarts.emit(false);
+        this.cartService.clearCart();
+        // Todo: go to shipment and payment page
         console.log(response);
       },
       (error) => {

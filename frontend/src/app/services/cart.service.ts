@@ -50,4 +50,8 @@ export class CartService {
       return item;
     });
   }
+
+  clearCart(): void {
+    this.carts.next([]);
+  }
 }
