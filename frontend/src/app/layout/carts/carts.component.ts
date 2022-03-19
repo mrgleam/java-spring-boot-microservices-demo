@@ -29,6 +29,10 @@ export class CartsComponent implements OnInit {
     })));
   }
 
+  get isEmptyCart(): boolean {
+    return !this.cartService?.carts?.value?.length;
+  }
+
   checkout(): void {
     const order: Order = {
       id: null,
