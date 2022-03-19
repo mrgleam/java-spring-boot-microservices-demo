@@ -1,3 +1,3 @@
 # java-spring-boot-microservices-demo
 
-A simple application architecture with Reactive Programming 
+A message-driven architecture with Reactive Programming
