@@ -3,74 +3,43 @@ package com.mathsermone.store.demo.orderservice.service;
 import com.mathsermone.store.demo.orderservice.constants.OrderStatus;
 import com.mathsermone.store.demo.orderservice.model.Order;
 import com.mathsermone.store.demo.orderservice.repository.OrderRepository;
+import com.mathsermone.store.demo.orderservice.service.producer.OrderProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class OrderService {
-    @Autowired
-    private WebClient webClient;
 
     @Autowired
     OrderRepository orderRepository;
 
-    @Value("${inventoryServiceUrl}")
-    private String inventoryServiceUrl;
-
-    @Value("${shipmentServiceUrl}")
-    private String shipmentServiceUrl;
+    @Autowired
+    OrderProducer orderProducer;
 
     public Mono<Order> createOrder(Order order) {
         return Mono.just(order)
+                .map(o -> o.setLineItems(o.getLineItems()
+                            .stream()
+                            .filter(l -> l.getQuantity() > 0)
+                            .collect(Collectors.toList())))
                 .flatMap(orderRepository::save)
-                .flatMap(o -> webClient.method(HttpMethod.POST)
-                            .uri(inventoryServiceUrl)
-                            .accept(MediaType.APPLICATION_JSON)
-                            .body(BodyInserters.fromValue(o))
-                            .exchangeToMono(response -> response.bodyToMono(Order.class)))
+                .map(o -> {
+                    orderProducer.sendMessage(o.setOrderStatus(OrderStatus.INITIATION_SUCCESS));
+                    return o;
+                })
                 .onErrorResume(err -> Mono.just(order.setOrderStatus(OrderStatus.FAILURE)
                             .setResponseMessage(err.getMessage())))
-                .flatMap(o -> {
-                    if (!OrderStatus.FAILURE.equals(o.getOrderStatus())) {
-                        return webClient.method(HttpMethod.POST)
-                                .uri(shipmentServiceUrl)
-                                .accept(MediaType.APPLICATION_JSON)
-                                .body(BodyInserters.fromValue(o))
-                                .exchangeToMono(response -> response.bodyToMono(Order.class));
-                    } else {
-                        return Mono.just(o);
-                    }
-                })
-                .onErrorResume(err -> webClient.method(HttpMethod.DELETE)
-                            .uri(inventoryServiceUrl)
-                            .accept(MediaType.APPLICATION_JSON)
-                            .body(BodyInserters.fromValue(order))
-                            .retrieve()
-                            .bodyToMono(Order.class)
-                            .map(o -> o.setOrderStatus(OrderStatus.FAILURE)
-                                    .setResponseMessage(err.getMessage())))
-                .map(o -> {
-                    if (!OrderStatus.FAILURE.equals(o.getOrderStatus())) {
-                        return order.setShippingDate(o.getShippingDate())
-                                .setOrderStatus(OrderStatus.SUCCESS);
-                    } else {
-                        return order.setOrderStatus(OrderStatus.FAILURE)
-                                .setResponseMessage(o.getResponseMessage());
-                    }
-                })
                 .flatMap(orderRepository::save);
     }
 
     public Flux<Order> getOrders() {
+        log.info("Get all orders invoked.");
         return orderRepository.findAll();
     }
 }
