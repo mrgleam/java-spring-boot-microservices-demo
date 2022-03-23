@@ -1,4 +1,4 @@
-version: '3'
+version: '3.7'
 services:
   frontend:
     build: ./frontend
@@ -9,31 +9,30 @@ services:
     ports:
       - "8011:8011"
     depends_on:
-      - mongo-db
-      - kafka
-    links:
-      - mongo-db
-      - kafka
+      mongo-db:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+
   inventory-service:
     build: ./inventory-service
     ports:
       - "8012:8012"
     depends_on:
-      - mongo-db
-      - kafka
-    links:
-      - mongo-db
-      - kafka
+      mongo-db:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+
   shipment-service:
     build: ./shipment-service
     ports:
       - "8013:8013"
     depends_on:
-      - mongo-db
-      - kafka
-    links:
-      - mongo-db
-      - kafka
+      mongo-db:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
 
   zookeeper:
     image: wurstmeister/zookeeper
@@ -58,17 +57,32 @@ services:
 #      KAFKA_MESSAGE_MAX_BYTES: 2000000
     depends_on:
       - zookeeper
+    healthcheck:
+      test: nc -z localhost 9092 || exit -1
+      start_period: 15s
+      interval: 5s
+      timeout: 10s
+      retries: 10
 
   mongo-db:
     container_name: mongo-db
     build: ./mongo-replset
     ports:
       - "27021:27017"
-    links:
-      - mongo2
-      - mongo3
+    depends_on:
+      mongo2:
+        condition: service_healthy
+      mongo3:
+        condition: service_healthy
     restart: always
     entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "dbrs" ]
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongo mongo-db:27017/test --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+
   mongo2:
     container_name: mongo2
     image: mongo
@@ -76,6 +90,13 @@ services:
       - "27022:27017"
     restart: always
     entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "dbrs" ]
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongo mongo2:27017/test --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+
   mongo3:
     container_name: mongo3
     image: mongo
@@ -83,10 +104,15 @@ services:
       - "27023:27017"
     restart: always
     entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "dbrs" ]
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongo mongo3:27017/test --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
 
   mongo-seed-inventory-service:
     build: ./inventory-service/src/main/resources/mongo-seed
     depends_on:
-      - mongo-db
-    links:
-      - mongo-db
+      mongo-db:
+        condition: service_healthy
