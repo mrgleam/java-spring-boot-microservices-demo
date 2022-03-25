@@ -27,3 +27,4 @@ stateDiagram-v2
     INVENTORY_FAILURE --> [*]
 
 ```
+Ref: https://www.baeldung.com/java-reactive-systems
